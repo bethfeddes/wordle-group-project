@@ -1,6 +1,8 @@
 package com.wordle.service;
 
 import java.util.*;
+import java.nio.file.*;
+import java.io.IOException;
 
 public class WordService {
 
@@ -11,7 +13,69 @@ public class WordService {
         initializeWordVault();
     }
 
+    private void loadWordsFromFile() {
+        try {
+            // Try multiple possible paths for robustness
+            String[] possiblePaths = {
+                    "words.txt",
+                    "src/main/java/words.txt",
+                    "../words.txt"
+            };
+
+            boolean fileLoaded = false;
+
+            for (String pathStr : possiblePaths) {
+                Path path = Paths.get(pathStr);
+                System.out.println("Trying to load words from: " + path.toAbsolutePath());
+
+                if (Files.exists(path)) {
+                    List<String> fileWords = Files.readAllLines(path);
+                    int loadedCount = 0;
+
+                    for (String word : fileWords) {
+                        String trimmedWord = word.trim();
+                        if (trimmedWord.length() == 5 && trimmedWord.matches("[A-Za-z]+")) {
+                            wordVault.add(trimmedWord.toUpperCase());
+                            availableWords.add(trimmedWord.toUpperCase());
+                            loadedCount++;
+                        }
+                    }
+
+                    System.out.println("Successfully loaded " + loadedCount + " words from " + pathStr);
+                    fileLoaded = true;
+                    break;
+                }
+            }
+
+            if (!fileLoaded) {
+                System.out.println("words.txt not found in any expected location, will use hardcoded words");
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error loading words from file: " + e.getMessage());
+            System.out.println("Falling back to hardcoded words");
+        } catch (Exception e) {
+            System.err.println("Unexpected error loading words: " + e.getMessage());
+            System.out.println("Falling back to hardcoded words");
+        }
+    }
+
     private void initializeWordVault() {
+        System.out.println("Initializing word vault...");
+
+        // Try to load from file first
+        loadWordsFromFile();
+
+        // If no words were loaded from file, use hardcoded fallback
+        if (wordVault.isEmpty()) {
+            System.out.println("Using hardcoded word list as fallback");
+            loadHardcodedWords();
+        } else {
+            System.out.println("Word vault initialized with " + wordVault.size() + " words from file");
+        }
+    }
+
+    private void loadHardcodedWords() {
         // Basic 5-letter English words as fallback
         String[] commonWords = {
                 "ABOUT", "ABOVE", "ABUSE", "ACTOR", "ACUTE", "ADMIT", "ADOPT", "ADULT", "AFTER", "AGAIN",
@@ -73,15 +137,14 @@ public class WordService {
                 "YOUTH", "ZEBRA"
         };
 
-        wordVault.clear();
-        availableWords.clear();
-
         for (String word : commonWords) {
             if (word.length() == 5) {
                 wordVault.add(word);
                 availableWords.add(word);
             }
         }
+
+        System.out.println("Loaded " + wordVault.size() + " hardcoded words");
     }
 
     public String getRandomWord() {
