@@ -45,9 +45,12 @@ public class JsonUtil {
 
         if (obj instanceof Game) {
             Game game = (Game) obj;
+            // Only include targetWord if the game is over (won or lost)
+            String targetWordJson = game.getGameState() == GameState.ACTIVE ? "\"HIDDEN\"" : toJson(game.getTargetWord());
             return String.format(
-                    "{\"gameId\":%s,\"targetWord\":\"HIDDEN\",\"guesses\":%s,\"gameState\":%s,\"remainingAttempts\":%d}",
+                    "{\"gameId\":%s,\"targetWord\":%s,\"guesses\":%s,\"gameState\":%s,\"remainingAttempts\":%d}",
                     toJson(game.getGameId()),
+                    targetWordJson,
                     toJson(game.getGuesses()),
                     toJson(game.getGameState().toString()),
                     game.getRemainingAttempts());

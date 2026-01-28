@@ -30,7 +30,6 @@ public class WordleHttpServer {
         // CORS handler for OPTIONS requests
         server.createContext("/api/game/new", new NewGameHandler());
         server.createContext("/api/game/", new GameHandler());
-        server.createContext("/api/game/guess", new GuessHandler());
 
         server.setExecutor(null); // creates a default executor
         server.start();
@@ -60,43 +59,25 @@ public class WordleHttpServer {
             String path = exchange.getRequestURI().getPath();
             String[] pathParts = path.split("/");
 
-            if (pathParts.length >= 4 && "GET".equals(exchange.getRequestMethod())) {
+            if (pathParts.length >= 4 && ("GET".equals(exchange.getRequestMethod()) || "POST".equals(exchange.getRequestMethod()) || "OPTIONS".equals(exchange.getRequestMethod()))) {
                 handleCORS(exchange);
                 String gameId = pathParts[3];
-                try {
-                    Game game = gameService.getGame(gameId);
-                    String response = JsonUtil.toJson(game);
-                    sendResponse(exchange, 200, response);
-                } catch (Exception e) {
-                    sendResponse(exchange, 404, "{\"error\":\"Game not found\"}");
-                }
-            } else {
-                sendResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
-            }
-        }
-    }
-
-    class GuessHandler implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            if ("POST".equals(exchange.getRequestMethod()) || "OPTIONS".equals(exchange.getRequestMethod())) {
-                handleCORS(exchange);
-
-                if ("POST".equals(exchange.getRequestMethod())) {
-                    String path = exchange.getRequestURI().getPath();
-                    String[] pathParts = path.split("/");
-
-                    if (pathParts.length >= 4) {
-                        String gameId = pathParts[3];
-                        String requestBody = readRequestBody(exchange);
-                        GuessRequest guessRequest = JsonUtil.parseGuessRequest(requestBody);
-
-                        GuessResponse response = gameService.submitGuess(gameId, guessRequest.getGuess());
-                        String jsonResponse = JsonUtil.toJson(response);
-                        sendResponse(exchange, 200, jsonResponse);
-                    } else {
-                        sendResponse(exchange, 400, "{\"error\":\"Invalid game ID\"}");
+                
+                if ("GET".equals(exchange.getRequestMethod())) {
+                    try {
+                        Game game = gameService.getGame(gameId);
+                        String response = JsonUtil.toJson(game);
+                        sendResponse(exchange, 200, response);
+                    } catch (Exception e) {
+                        sendResponse(exchange, 404, "{\"error\":\"Game not found\"}");
                     }
+                } else if ("POST".equals(exchange.getRequestMethod())) {
+                    String requestBody = readRequestBody(exchange);
+                    GuessRequest guessRequest = JsonUtil.parseGuessRequest(requestBody);
+                    
+                    GuessResponse response = gameService.submitGuess(gameId, guessRequest.getGuess());
+                    String jsonResponse = JsonUtil.toJson(response);
+                    sendResponse(exchange, 200, jsonResponse);
                 }
             } else {
                 sendResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
@@ -104,6 +85,7 @@ public class WordleHttpServer {
         }
     }
 
+    
     private void handleCORS(HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
