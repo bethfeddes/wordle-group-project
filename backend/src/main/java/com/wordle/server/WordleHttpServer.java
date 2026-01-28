@@ -30,6 +30,7 @@ public class WordleHttpServer {
         // CORS handler for OPTIONS requests
         server.createContext("/api/game/new", new NewGameHandler());
         server.createContext("/api/game/", new GameHandler());
+        server.createContext("/test", new TestHandler());
 
         server.setExecutor(null); // creates a default executor
         server.start();
@@ -59,10 +60,11 @@ public class WordleHttpServer {
             String path = exchange.getRequestURI().getPath();
             String[] pathParts = path.split("/");
 
-            if (pathParts.length >= 4 && ("GET".equals(exchange.getRequestMethod()) || "POST".equals(exchange.getRequestMethod()) || "OPTIONS".equals(exchange.getRequestMethod()))) {
+            if (pathParts.length >= 4 && ("GET".equals(exchange.getRequestMethod())
+                    || "POST".equals(exchange.getRequestMethod()) || "OPTIONS".equals(exchange.getRequestMethod()))) {
                 handleCORS(exchange);
                 String gameId = pathParts[3];
-                
+
                 if ("GET".equals(exchange.getRequestMethod())) {
                     try {
                         Game game = gameService.getGame(gameId);
@@ -72,12 +74,28 @@ public class WordleHttpServer {
                         sendResponse(exchange, 404, "{\"error\":\"Game not found\"}");
                     }
                 } else if ("POST".equals(exchange.getRequestMethod())) {
-                    String requestBody = readRequestBody(exchange);
-                    GuessRequest guessRequest = JsonUtil.parseGuessRequest(requestBody);
-                    
-                    GuessResponse response = gameService.submitGuess(gameId, guessRequest.getGuess());
-                    String jsonResponse = JsonUtil.toJson(response);
-                    sendResponse(exchange, 200, jsonResponse);
+                    try {
+                        String requestBody = readRequestBody(exchange);
+                        System.out.println("Received guess request for game: " + gameId);
+                        System.out.println("Request body: " + requestBody);
+
+                        GuessRequest guessRequest = JsonUtil.parseGuessRequest(requestBody);
+                        System.out.println("Parsed guess: " + guessRequest.getGuess());
+
+                        GuessResponse response = gameService.submitGuess(gameId, guessRequest.getGuess());
+                        String jsonResponse = JsonUtil.toJson(response);
+                        System.out.println("Response: " + jsonResponse);
+
+                        // Return 400 for invalid guesses, 200 for valid ones
+                        int statusCode = response.isSuccess() ? 200 : 400;
+                        sendResponse(exchange, statusCode, jsonResponse);
+                    } catch (Exception e) {
+                        System.err.println("Error processing guess: " + e.getMessage());
+                        e.printStackTrace();
+                        String errorResponse = "{\"success\":false,\"message\":\"Server error: " + e.getMessage()
+                                + "\"}";
+                        sendResponse(exchange, 500, errorResponse);
+                    }
                 }
             } else {
                 sendResponse(exchange, 405, "{\"error\":\"Method not allowed\"}");
@@ -85,7 +103,6 @@ public class WordleHttpServer {
         }
     }
 
-    
     private void handleCORS(HttpExchange exchange) throws IOException {
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -107,6 +124,15 @@ public class WordleHttpServer {
         OutputStream os = exchange.getResponseBody();
         os.write(response.getBytes());
         os.close();
+    }
+
+    class TestHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            handleCORS(exchange);
+            String response = "{\"status\":\"Server is working!\"}";
+            sendResponse(exchange, 200, response);
+        }
     }
 
     public static void main(String[] args) {

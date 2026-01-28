@@ -34,7 +34,7 @@ public class JsonUtil {
                     gr.isSuccess(),
                     toJson(gr.getMessage()),
                     toJson(gr.getLetterResults()),
-                    toJson(gr.getGameState().toString()),
+                    gr.getGameState() != null ? toJson(gr.getGameState().toString()) : "null",
                     gr.getRemainingAttempts());
         }
 
@@ -46,7 +46,8 @@ public class JsonUtil {
         if (obj instanceof Game) {
             Game game = (Game) obj;
             // Only include targetWord if the game is over (won or lost)
-            String targetWordJson = game.getGameState() == GameState.ACTIVE ? "\"HIDDEN\"" : toJson(game.getTargetWord());
+            String targetWordJson = game.getGameState() == GameState.ACTIVE ? "\"HIDDEN\""
+                    : toJson(game.getTargetWord());
             return String.format(
                     "{\"gameId\":%s,\"targetWord\":%s,\"guesses\":%s,\"gameState\":%s,\"remainingAttempts\":%d}",
                     toJson(game.getGameId()),

@@ -154,8 +154,15 @@ class WordleGame {
                 this.showMessage(response.message);
             }
         } catch (error) {
-            const errorMessage = this.apiService.handleApiError(error, 'Failed to submit guess');
-            this.showMessage(errorMessage);
+            // Check if this is a validation error from the server
+            if (error.message && !error.message.includes('Failed to fetch') && !error.message.includes('Network')) {
+                // Show the actual server error message
+                this.showMessage(error.message);
+            } else {
+                // Show generic connection error for actual network issues
+                const errorMessage = this.apiService.handleApiError(error, 'Failed to submit guess');
+                this.showMessage(errorMessage);
+            }
         } finally {
             this.isProcessing = false;
         }
