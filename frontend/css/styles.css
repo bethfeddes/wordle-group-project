@@ -1,257 +1,264 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121213;
-    color: #ffffff;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121213;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
 }
 
 header {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 h1 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ffffff;
 }
 
 .game-controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .btn {
-    background-color: #818384;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background-color 0.2s;
+  background-color: #818384;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s;
 }
 
 .btn:hover {
-    background-color: #565758;
+  background-color: #565758;
 }
 
 .game-info {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.attempts {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .message {
-    font-size: 1rem;
-    min-height: 24px;
-    color: #ffffff;
+  font-size: 1rem;
+  min-height: 24px;
+  color: #ffffff;
 }
 
 .game-board {
-    display: grid;
-    grid-template-rows: repeat(6, 1fr);
-    gap: 5px;
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #121213;
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  gap: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #121213;
 }
 
 .row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
 }
 
 .tile {
-    width: 62px;
-    height: 62px;
-    border: 2px solid #3a3a3c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: all 0.2s;
+  width: 62px;
+  height: 62px;
+  border: 2px solid #3a3a3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.2s;
 }
 
 .tile.filled {
-    animation: pop 0.1s;
-    border-color: #565758;
+  animation: pop 0.1s;
+  border-color: #565758;
 }
 
 .tile.correct {
-    background-color: #538d4e;
-    border-color: #538d4e;
-    color: #ffffff;
+  background-color: #538d4e;
+  border-color: #538d4e;
+  color: #ffffff;
 }
 
 .tile.present {
-    background-color: #b59f3b;
-    border-color: #b59f3b;
-    color: #ffffff;
+  background-color: #b59f3b;
+  border-color: #b59f3b;
+  color: #ffffff;
 }
 
 .tile.absent {
-    background-color: #3a3a3c;
-    border-color: #3a3a3c;
-    color: #ffffff;
+  background-color: #3a3a3c;
+  border-color: #3a3a3c;
+  color: #ffffff;
 }
 
 @keyframes pop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes flip {
-    0% { transform: rotateX(0); }
-    50% { transform: rotateX(90deg); }
-    100% { transform: rotateX(0); }
+  0% {
+    transform: rotateX(0);
+  }
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0);
+  }
 }
 
 .keyboard {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 .keyboard-row {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 8px;
-    gap: 6px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+  gap: 6px;
 }
 
 .keyboard button {
-    background-color: #818384;
-    border: none;
-    color: white;
-    padding: 0;
-    height: 58px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 32px;
-    max-width: 32px;
+  background-color: #818384;
+  border: none;
+  color: white;
+  padding: 0;
+  height: 58px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  max-width: 32px;
 }
 
 .keyboard button.wide-btn {
-    min-width: 65px;
-    max-width: 65px;
-    font-size: 12px;
+  min-width: 65px;
+  max-width: 65px;
+  font-size: 12px;
 }
 
 .keyboard button:hover {
-    background-color: #565758;
+  background-color: #565758;
 }
 
 .keyboard button:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .keyboard button.correct {
-    background-color: #538d4e;
+  background-color: #538d4e;
 }
 
 .keyboard button.present {
-    background-color: #b59f3b;
+  background-color: #b59f3b;
 }
 
 .keyboard button.absent {
-    background-color: #3a3a3c;
+  background-color: #3a3a3c;
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal-content {
-    background-color: #121213;
-    margin: 15% auto;
-    padding: 30px;
-    border: 2px solid #3a3a3c;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
+  background-color: #121213;
+  margin: 15% auto;
+  padding: 30px;
+  border: 2px solid #3a3a3c;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
 }
 
 .modal-content h2 {
-    margin-bottom: 15px;
-    font-size: 1.8rem;
+  margin-bottom: 15px;
+  font-size: 1.8rem;
 }
 
 .modal-content p {
-    margin-bottom: 20px;
-    font-size: 1.1rem;
-    line-height: 1.5;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
 
 .modal-content .btn {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 @media (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-    
-    .tile {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
-    }
-    
-    .keyboard button {
-        height: 50px;
-        font-size: 12px;
-        min-width: 26px;
-        max-width: 26px;
-    }
-    
-    .keyboard button.wide-btn {
-        min-width: 52px;
-        max-width: 52px;
-        font-size: 10px;
-    }
+  .container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .tile {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  .keyboard button {
+    height: 50px;
+    font-size: 12px;
+    min-width: 26px;
+    max-width: 26px;
+  }
+
+  .keyboard button.wide-btn {
+    min-width: 52px;
+    max-width: 52px;
+    font-size: 10px;
+  }
 }
